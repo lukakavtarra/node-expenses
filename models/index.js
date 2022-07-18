@@ -1,10 +1,12 @@
-const dbConfig = require("../config/db.js");
-const Sequelize = require("sequelize");
+const Sequelize = require('sequelize');
+const dbConfig = require('../config/db');
 
-const { DB, USER, PASSWORD, HOST, pool } = dbConfig;
+const {
+  DB, USER, PASSWORD, HOST, pool,
+} = dbConfig;
 const sequelize = new Sequelize(DB, USER, PASSWORD, {
   HOST,
-  dialect: "postgres",
+  dialect: 'postgres',
   pool: {
     max: pool.max,
     min: pool.min,
@@ -13,5 +15,6 @@ const sequelize = new Sequelize(DB, USER, PASSWORD, {
   },
 });
 
-const expenses = require("./expenses.model")(sequelize, Sequelize);
+const expenses = require('./expenses.model')(sequelize, Sequelize);
+
 module.exports = expenses;
