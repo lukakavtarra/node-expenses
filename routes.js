@@ -1,12 +1,12 @@
-module.exports = (app) => {
-  const expensesController = require("./controllers/expenses.controller.js");
-  const router = require("express").Router();
+const router = require('express').Router();
+const expensesController = require('./controllers/expenses.controller');
 
-  router.route("/").get(expensesController.get).post(expensesController.add);
+module.exports = (app) => {
+  router.route('/').get(expensesController.get).post(expensesController.add);
   router
-    .route("/:id")
+    .route('/:id')
     .delete(expensesController.remove)
     .patch(expensesController.update);
 
-  app.use("/api/expenses", router);
+  app.use('/api/expenses', router);
 };
