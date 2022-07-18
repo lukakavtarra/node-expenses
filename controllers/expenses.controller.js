@@ -1,4 +1,4 @@
-const expenses = require("../models");
+const expenses = require('../models');
 
 exports.get = async (req, res) => {
   try {
@@ -14,10 +14,10 @@ exports.add = async (req, res) => {
   const { shop, price } = req.body;
   const errorMessage = [];
   if (!shop || !shop.trim()) {
-    errorMessage.push("Shop name should be defined");
+    errorMessage.push('Shop name should be defined');
   }
-  if (price <= 0 || isNaN(price)) {
-    errorMessage.push("Price is not valid");
+  if (price <= 0 || Number.isNaN(price)) {
+    errorMessage.push('Price is not valid');
   }
   if (errorMessage.length) {
     return res.status(422).send({ answer: errorMessage });
@@ -33,12 +33,12 @@ exports.add = async (req, res) => {
 exports.remove = async (req, res) => {
   const { id } = req.params;
   if (!id || !id.trim()) {
-    res.status(422).send({ answer: "Id is not valid" });
+    res.status(422).send({ answer: 'Id is not valid' });
   }
   try {
     const remove = await expenses.destroy({ where: { id } });
     if (remove) return await exports.get(req, res);
-    return res.status(404).send({ answer: "Expense does not exist" });
+    return res.status(404).send({ answer: 'Expense does not exist' });
   } catch (error) {
     return res.status(422).send({ answer: error });
   }
@@ -52,36 +52,33 @@ exports.update = async (req, res) => {
   const expensesChange = {};
 
   if (!shop && !price) {
-    return res.status(422).send({ answer: "Inputs should not be empty" });
-  } else {
-    if (price) {
-      if (price < 0 || isNaN(price) || typeof price != "number") {
-        errorMessage.push("Price is not valid");
-      } else {
-        expensesChange.price = price;
-      }
+    return res.status(422).send({ answer: 'Inputs should not be empty' });
+  }
+  if (price) {
+    if (price < 0 || Number.isNaN(price) || typeof price !== 'number') {
+      errorMessage.push('Price is not valid');
+    } else {
+      expensesChange.price = price;
     }
-    if (shop) {
-      if (!shop.trim()) {
-        errorMessage.push("Shop name should not be empty");
-      } else {
-        expensesChange.shop = shop;
-      }
+  }
+  if (shop) {
+    if (!shop.trim()) {
+      errorMessage.push('Shop name should not be empty');
+    } else {
+      expensesChange.shop = shop;
     }
   }
 
-  if (errorMessage.length)
-    return res.status(422).send({ answer: errorMessage });
+  if (errorMessage.length) return res.status(422).send({ answer: errorMessage });
 
   try {
     const [change] = await expenses.update(expensesChange, {
-      where: { id: id },
+      where: { id },
     });
     if (change === 1) {
       return await this.get(req, res);
-    } else {
-      return res.status(404).send({ answer: "Instance not found." });
     }
+    return res.status(404).send({ answer: 'Instance not found.' });
   } catch (error) {
     return res.status(422).send({ answer: error });
   }
